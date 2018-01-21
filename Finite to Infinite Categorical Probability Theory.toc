@@ -1,0 +1,12 @@
+\contentsline {section}{\tocsection {}{1}{Introduction.}}{1}{section.1}
+\contentsline {section}{\tocsection {}{2}{Categorical Probability Theory}}{1}{section.2}
+\contentsline {subsection}{\tocsubsection {}{2.1}{A category of stochastic maps.}}{1}{subsection.2.1}
+\contentsline {subsection}{\tocsubsection {}{2.2}{A category of probability spaces.}}{3}{subsection.2.2}
+\contentsline {subsection}{\tocsubsection {}{2.3}{Restricting to convenient subcategories.}}{4}{subsection.2.3}
+\contentsline {subsection}{\tocsubsection {}{2.4}{Regular conditional probabilities}}{5}{subsection.2.4}
+\contentsline {subsection}{\tocsubsection {}{2.5}{The category of perfect probability measures.}}{7}{subsection.2.5}
+\contentsline {subsection}{\tocsubsection {}{2.6}{A variation on the Giry monad}}{7}{subsection.2.6}
+\contentsline {section}{\tocsection {}{3}{A nice category of Bayesian processes.}}{9}{section.3}
+\contentsline {section}{\tocsection {}{4}{The relative entropy of $\mathbf {PBayes}$-morphisms.}}{11}{section.4}
+\contentsline {section}{\tocsection {}{5}{TO DO.}}{11}{section.5}
+\contentsline {section}{\tocsection {}{}{References}}{12}{section*.2}

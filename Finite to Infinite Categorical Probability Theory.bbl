@@ -1,0 +1,57 @@
+\begin{thebibliography}{1}
+
+\bibitem{AbramBlutePanan_NuclearTraceIdeals}
+Samson Abramsky, Richard Blute, and Prakash Panangaden.
+\newblock Nuclear and trace ideals in tensored {$\ast$}-categories.
+\newblock {\em J. Pure Appl. Algebra}, 143(1-3):3--47, 1999.
+\newblock Special volume on the occasion of the 60th birthday of Professor
+  Michael Barr (Montreal, QC, 1997).
+
+\bibitem{BaezFritz_RelEntropy}
+John~C Baez and Tobias Fritz.
+\newblock A bayesian characterization of relative entropy.
+\newblock {\em Theory and Applications of Categories}, 29(16):422--456, 2014.
+
+\bibitem{CulbSturtz_CategoricalBayesProb}
+Jared Culbertson and Kirk Sturtz.
+\newblock A categorical foundation for {B}ayesian probability.
+\newblock {\em Appl. Categ. Structures}, 22(4):647--662, 2014.
+
+\bibitem{Faden_ExistRegCondProbs}
+Arnold~M. Faden.
+\newblock The existence of regular conditional probabilities: necessary and
+  sufficient conditions.
+\newblock {\em Ann. Probab.}, 13(1):288--298, 1985.
+
+\bibitem{Folland_RealAnalysis}
+Gerald~B. Folland.
+\newblock {\em Real analysis}.
+\newblock Pure and Applied Mathematics (New York). John Wiley \& Sons, Inc.,
+  New York, second edition, 1999.
+\newblock Modern techniques and their applications, A Wiley-Interscience
+  Publication.
+
+\bibitem{Fong_CatBayesianNetworks}
+Brendan Fong.
+\newblock Causal theories: A categorical perspective on bayesian networks.
+\newblock {\em arXiv preprint arXiv:1301.6201}, 2013.
+
+\bibitem{Giry_GiryMonad}
+Mich{\`e}le Giry.
+\newblock A categorical approach to probability theory.
+\newblock In {\em Categorical aspects of topology and analysis ({O}ttawa,
+  {O}nt., 1980)}, volume 915 of {\em Lecture Notes in Math.}, pages 68--85.
+  Springer, Berlin-New York, 1982.
+
+\bibitem{Panangaden_ProbRels}
+Prakash Panangaden.
+\newblock Probabilistic relations.
+\newblock {\em SCHOOL OF COMPUTER SCIENCE RESEARCH REPORTS-UNIVERSITY OF
+  BIRMINGHAM CSR}, pages 59--74, 1998.
+
+\bibitem{Rodine_PerfectProbRegCondProb}
+Robert~H Rodine.
+\newblock Perfect probability measures and regular conditional probabilities.
+\newblock {\em The Annals of Mathematical Statistics}, pages 1273--1278, 1966.
+
+\end{thebibliography}

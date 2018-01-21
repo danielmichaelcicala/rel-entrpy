@@ -1,0 +1,1228 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%                                             PREAMPLE
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt]{amsart}
+%\usepackage{Style_Notes}
+
+%------------------------- LOAD PACKAGES ------------------------------
+\usepackage{amsfonts,amsthm,amssymb,amsmath,stmaryrd,etoolbox}
+\usepackage{comment}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\setlist{itemsep=0em, topsep=0em, parsep=0em}
+\setlist[enumerate]{label=(\alph*)}
+\usepackage{tikz-cd}
+\usetikzlibrary{matrix,arrows}
+
+\usepackage[breaklinks,bookmarks=false]{hyperref}%Always last package
+\definecolor{myurlcolor}{rgb}{0,0,0.7}
+\hypersetup{colorlinks,
+	linkcolor=myurlcolor, 
+	citecolor=myurlcolor, 
+	urlcolor=myurlcolor}
+
+%------------------------- NEW COMMANDS ------------------------------
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\CC}{\mathbb{C}}
+\renewcommand{\epsilon}{\varepsilon}
+
+\newcommand{\cl}[1]{\mathcal{#1}}
+\newcommand{\scr}[1]{\mathscr{#1}}
+\newcommand{\op}[1]{\operatorname{#1}}
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\t}[1]{\textup{#1}}
+\newcommand{\ev}{\textup{ev}}
+
+\newcommand{\from}{\colon}
+\newcommand{\xto}[1]{\xrightarrow{#1}}
+\newcommand{\sm}{\smallsetminus}
+\renewcommand{\ss}[2]{_{#1}^{#2}}
+
+
+%------------------------ DECLARE MATH OPERATORS ---------------------------
+
+\DeclareMathOperator{\Hom}{hom}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\ob}{ob}
+\DeclareMathOperator{\arr}{arr}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Bij}{Bij}
+
+
+%------------------ ENVIRONMENTS BEYOND CLASS FILE ------------------------
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{remark}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{notation}[thm]{Notation}
+
+\theoremstyle{definition}
+\newtheorem{ex}[thm]{Example} 
+\newtheorem{defn}[thm]{Definition}
+
+\setcounter{tocdepth}{1} % Sets depth for table of contents. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%                                       BEGIN DOCUMENT
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+	\title{Categorical probability theory and functorial Bayesian relative entropy}
+	\maketitle
+	
+	\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{Introduction.}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Categorical Probability Theory}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this section, we introduce a pair of 
+categories.  The first is a category 
+$\cat{Stoch}$ of measurable spaces with 
+stochastic maps between them.  After studying 
+some of the structure of this category, we 
+will look at an important under category which 
+turns out to be the category $\cat{Prob}$ of 
+probability spaces.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{A category of stochastic maps.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A \emph{stochastic map} between two measurable 
+space $f \from (X,\Sigma) \to (X',\Sigma')$ is 
+a function
+
+\[
+	f \from X \times \Sigma' \to [0,1]
+\]
+such that 
+\begin{itemize}
+		\item $f(x,-) \from \Sigma' \to [0,1]$ is a probability measure for each $x \in X$, and 
+		\item  $f(-,A') \from X \to [0,1]$ is a measurable function, with respect to the Borel $\sigma$-algebra on $[0,1]$, for each $A' \in \Sigma'$.
+\end{itemize}
+Other names found in the literature are Markov 
+kernel or stochastic kernel.
+
+Composition of two stochastic maps
+\[
+	(X,\Sigma) \xto{f} (X',\Sigma') \xto{g} (X'',\Sigma'')
+\]
+is given by the function
+\[
+	f;g \from X \times \Sigma'' \to [0,1], \quad
+	(x,A'') \mapsto \int_{X'} g(-,A'')df(x,-).
+\]
+This is the $f(x,-)$-expectation of the random variable $g(-,A'')$. Because $0 \leq g(-,A'') \leq 1$ and $f(x,X')=1$, this integral takes a value in $[0,1]$. Panangaden in \cite[Prop. 3.2]{Panangaden_ProbRels} used the monotone convergence theorem to show associativity. A simple calculation shows that the Dirac function $\delta \from (X,\Sigma) \to (X,\Sigma)$,
+\[
+	X \times \Sigma \to [0,1], \quad 
+	(x,A) \mapsto 
+	\begin{cases}
+		0, & \t{ if } x \not\in A, \\
+		1, & \t{ if } x \in A. \\
+	\end{cases}
+\]
+serves as the identity. Thus we have a 
+category $\cat{Stoch}$ of measurable 
+spaces and stochastic maps.
+
+An important class of stochastic maps are the \emph{deterministic} stochastic 
+maps.  These are the maps $X \times \Sigma' \to [0,1]$ that only take values $0$ or $1$. For example, the identities of $\cat{Stoch}$ are deterministic.  However, the main examples of deterministic maps that we care about arise from measurable functions. 
+
+\begin{ex}[Deterministic maps in $\cat{Stoch}$]
+	Given a measurable map $f \from (X,\Sigma) \to (X',\Sigma')$, denote by $\delta_f$ the stochastic map defined by 
+	\[
+	X \times \Sigma' \to [0,1], \quad
+	(x,A') \mapsto 
+	\begin{cases} 
+	0 & \t{ if } f(x) \not\in A', \\ 
+	1 & \t{ if } f(x) \in A'. 
+	\end{cases}
+	\]
+	This is measurable in the first variable:\ the inverse image of a Borel set $B 
+	\in [0,1]$ is 
+	\[\begin{cases}
+	\emptyset & \t{ if } 0,1 \not\in B, \\
+	f^{-1}(A') & \t{ if } 0 \not\in B \t{ and } 1 \in B, \\
+	f^{-1}(X \setminus A') & \t{ if } 0 \in B \t{ and } 1 \not\in B, \t{ and } \\
+	X & \t{ if } 0,1 \in B.
+	\end{cases}\] 
+	It is clear that $\delta_f$ is a probability measure in the second variable. From this point on, we will denote by $\delta_f$ the deterministic stochastic map associated to a measurable function $f$. Not all deterministic maps are obtained this way. 
+\end{ex}
+
+\begin{ex}
+	Suppose that $X$ is uncountable and $\Sigma$ is the $\sigma$-algebra generated by the singletons of the power-set on $X$. There is a measure $m$ on $(X, \Sigma)$ assigning no measure to countable sets and a measure of $1$ to those sets whose complements are countable.  This gives a deterministic map $(\{\ast\},\{\emptyset, \{\ast\} \} ) \to (X,\Sigma)$ 
+	\[
+	\{\ast \} \times \Sigma \to [0,1],\quad (\ast,B) \mapsto m(B).
+	\]
+	This does not arise from any measurable function $\{\ast\} \to 
+	X$ because there are countable sets in $\Sigma$ containing the image of $\ast$, and so must have no measure.  	
+\end{ex}
+
+The act of obtaining a deterministic stochastic map from a measurable function is functorial. That is, there is an identity-on-objects functor 
+\begin{equation} \label{eq.deterministic functor}
+	\delta \from \cat{Meas} \to \cat{Stoch}
+\end{equation}
+given by $f \mapsto \delta_f$.  As tempting as it is, do not think of $\cat{Meas}$ as a subcategory of $\cat{Stoch}$ because $\delta$ is not faithful as illustrated by the next example.
+
+\begin{ex}
+	Consider a measurable space 
+	$(X,\{\emptyset,X\})$ for any non-empty 
+	set $X$. Any set function $f \from \ast 
+	\to X$ induces a measurable function $f 
+	\from (\ast,\{\emptyset,\ast\}) \to 
+	(X,\{\emptyset,X\})$. Hitting this with 
+	$\delta$ gives us the stochastic map 
+	\[
+		\delta_f \from \ast \times \{\emptyset,X\} \to [0,1]
+	\] 
+	sending $\emptyset \mapsto 0$ and $X 
+	\mapsto 1$. Notice that $f$ plays no role 
+	in the definition of $\delta_f$. It turns 
+	out that $\delta_f = \delta_g$ for any 
+	pair of measurable functions $f,g \from 
+	(\ast,\{\emptyset,\ast\}) \to 
+	(X,\{\emptyset,X\})$. 	Indeed, under 
+	$\delta$ all indiscrete measurable spaces 
+	become isomorphic and the measureable maps 
+	between them are identified.  
+\end{ex}
+
+This next proposition and its corollary tell 
+us more about how $\delta$ treats measurable 
+functions on indiscrete measure spaces. 
+
+\begin{prop}
+	For any set $X$, the image of a measurable function
+	\[
+	f \from (\ast,\{\emptyset,\ast\}) \to (X,\{\emptyset,X\})
+	\] 
+	under $\delta$ is an isomorphism.
+\end{prop}
+\begin{proof}
+	A simple calculation will show that $\delta_f^{-1} = \delta_g$ where $g$ is the measurable function $(X,\{\emptyset,X\}) \to (\ast,\{\emptyset,\ast\})$. 
+\end{proof}
+
+\begin{cor} \label{cor.indiscrete m spaces all isom}
+	All indiscrete measurable spaces are isomorphic in $\cat{Stoch}$.  
+\end{cor}
+
+\begin{cor}
+	Any indiscrete measurable space are terminal in $\cat{Stoch}$.
+\end{cor}
+\begin{proof}
+	 Any stochastic map $X \times 
+	 \{\emptyset,\ast\} \to [0,1]$ is forced 
+	 to assign $(x,\epsilon) \mapsto 0$ and 
+	 $(x,\ast) \mapsto 1$ for every $x \in X$. 
+	 This is sufficient because of corollary 
+	 \ref{cor.indiscrete m spaces all isom}.
+\end{proof}
+
+Let's learn a bit more about isomorphisms in 
+$\cat{Stoch}$.  We'll first observe that, in 
+general, stochastic maps do not have much 
+respect for the structure of measurable 
+spaces. Indeed, isomorphisms in $\cat{Stoch}$ 
+are quite restrictive. 
+
+\begin{prop}[{\cite[Props. 2.16 \& 2.17]{Fong_CatBayesianNetworks}}]
+	Let $k \from (X,\Sigma) \to (X',\Sigma')$ be an isomorphism in $\cat{Stoch}$.  Then $k$ is deterministic. If $(X,\Sigma)$ and $(X',\Sigma')$ are countably generated and $k$ is deterministic, then it is an isomorphism.
+\end{prop}
+
+
+
+Now, we will move towards the next category of interest which will continue the trend and use $\cat{Stoch}$ in our construction. To be sure, we will actually focus on a particular subcategory of $\cat{Stoch}$ to ensure this category is sufficiently nice.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{A category of probability spaces.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Denote the $\cat{Stoch}$-object $(\ast,\{\emptyset,\ast\})$ by $1$. Think for a second about a stochastic map $1 \to (X,\Sigma)$.  This is a function $\ast \times \Sigma \to [0,1]$ that is measurable in the first variable and a probability measure in the second.  Since there is only a single element in the first factor, we are really dealing with a probability measure $\Sigma \to [0,1]$.  In fact, we will take the definition of a \textit{probability measure space} to be an arrow $1 \to (X,\Sigma)$ in $\cat{Stoch}$. This leads us to our next category.
+
+\begin{defn}
+	The category of probability spaces and probability measure preserving functions $\cat{Prob}$ is the under-category $1/\cat{Stoch}$.
+\end{defn}
+
+The category we really care about, however, is not $\cat{Prob}$ itself, but is closely related. But, for the desired Bayesian properties to be present, we will need to appropriately restrict to certain types of probability spaces.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Restricting to convenient subcategories.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Let's start with a \textit{joint probability measure}, that is, a probability measure $j \from 1 \to (X \times X', \Sigma \otimes \Sigma')$ on a product space.  From this we obtain the \textit{marginal probability measures} $\delta_\pi j$ and $\delta_{\pi'}j$ on $(X,\Sigma)$ and $(X',\Sigma')$, respectively, where $\pi$ and $\pi'$ are the $\cat{Meas}$-projections from the product $(X \times X', \Sigma \otimes \Sigma')$. 
+
+The relationship between joint measure $j$ and its marginals, which we'll denote $p,p'$, is not symmetric.  While knowing $j$ is sufficient to tell you the marginals, we cannot, in general, determine $j$ from the marginals alone. The extra information contained in $j$ is hidden in some sort of relationship between $p$ and $p'$. Namely, this relationship is given by a $\cat{Prob}$-morphism between the marginals. That is a diagram
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & {1} \ar[dl,swap,"p"] \ar[dr,"p'"] & {} \\
+{(X,\Sigma)} \ar[rr,"f" ]& {} & {(X',\Sigma')}
+\end{tikzcd}
+\]
+induces a joint measure $j \from 1 \to (X \times X',\Sigma \otimes \Sigma')$ whose marginals are $p$ and $p'$. This justifies us changing viewpoints between joint probability measures (as favored in \cite{AbramBlutePanan_NuclearTraceIdeals}) and morphisms in $\cat{Prob}$ (as we will do). {\color{red}Find two maps $f$, $f' :X \to X'$ that determine different joint probabilities on $X \times X'$.}
+
+Now, let's start to restrict out attention to a select class of probability spaces.  We will be content to remain unmotivated as to the reason for this restriction for the time being.  It will become clear when we introduce the category of Bayesian processes in Section \ref{sec.bayes processes}.
+
+\begin{defn}[Perfect Probability Measures]
+	A probability space $(X,\Sigma,p)$ is \emph{perfect} if for any measurable function $f \from X \to \RR$, there is a Borel set $E \subseteq f(X)$ such that $p(\ast,f^{-1}(E))=p(\ast,X)=1$. A family of measures $\{p_i \from 1 \to (X,\Sigma)\}$ on $X$ is called \emph{equiperfect} if, given $f$ as before, there is a single Borel set $E$ such that $p_i(\ast,f^{-1}(E))=p_i(\ast,X)=1$. 
+\end{defn}
+
+The rough idea of a perfect probability measure space $(X,\Sigma,p)$ is that, whenever $p$ is measurably pushed-forward via $f \from X \to \RR$ to a measure on $\RR$, then every $\Sigma$-set is $p$-approximately a Borel set $f^{-1}(B)$. 
+
+The class of perfect probability measures is quite large.  It is not difficult to show that any probability space on a discrete measure is perfect.  In particular, any finite probability space is perfect.  Additionally, we obtain a large collection of important examples, namely Radon probability spaces.
+
+\begin{ex}
+	Recall that a Radon probability measure $p$ on a Hausdorff topological space $X$ with the Borel $\sigma$-algebra is one such that, for any Borel set $A$, $p(A)$ is the supremum of $p(K)$ over compact sets $K$ contained in $A$. Radon probability spaces are perfect.  Indeed, by Lusin's theorem (see any measure theory text), there is a closed set $E_n$ such that $p(X \sm E_n) < \frac{1}{2n}$ and $f|_{E_n}$ is continuous. Let $K_n$ be a compact set contained in $E_n$ such that $p(X \sm K_n) < \frac{1}{2n}$. Then $f(K_n)$ is compact and $p(X \sm f^{-1}(f(K_n))) < \frac{1}{n}$. Denoting $A \coloneqq \cup_n f(K_n)$, we have that $A$ is Borel and $p(X \sm f^{-1}(A))=0$.	
+\end{ex}
+
+In particular, any probability measure on the Borel $\sigma$-algebra of a Polish space is a Radon measure.  
+
+The theorem (discussed in \cite[Thm. 2.2]{CulbSturtz_CategoricalBayesProb}) below collects some nice properties of perfect probability measures whose proofs can be found in \cite{Faden_ExistRegCondProbs} and \cite{Rodine_PerfectProbRegCondProb}.
+
+\begin{thm} \label{Thm.Perfect Prob Measure Facts}
+	Let $(X,\Sigma)$ and $(X',\Sigma')$ be measurable spaces.
+	\begin{enumerate}
+		\item Any probability measure with values in $\{0,1\}$ is perfect. \label{thm.perfect prob fact deterministic is perfect}
+		\item Given probability measures $p,q \from 1 \to (X,\Sigma)$, such that $q \ll p$, then $p$ perfect implies $q$ perfect.
+		\item  Any restriction of a perfect probability measure to a $\sigma$-subalgebra is perfect.
+		\item Pushforwards of perfect probability measure along measurable functions are perfect.
+		\item A joint probability is perfect if and only if its marginals are.
+		\item Let $f \from (X,\Sigma) \to (X',\Sigma')$ be a stochastic map that is measurable in the first factor and let $p$ be a perfect probability measure on $(X,\Sigma)$. Then the assignment
+		\[
+			A' \mapsto \int_X f(x,A')dp
+		\] 
+		is a perfect probability measure if and only if $\{f(x,-) : x \in X\}$ is equiperfect $p$-almost everywhere. \label{thm.perfect prob fact composition}
+	\end{enumerate}
+\end{thm}
+
+\begin{defn}
+	The subcategory $\cat{PStoch}$ of $\cat{Stoch}$ has as objects, the countably generated measurable spaces and as arrows, stochastic maps that form a family of equiperfect probability measures in the second variable. 
+\end{defn}
+
+Composition in $\cat{PStoch}$ is well-defined: given a $\cat{PStoch}$-maps $f \from (X,\Sigma) \to (Y,\Sigma')$, $g \from (Y,\Sigma') \to (Z,\Sigma'')$, a measurable map $h \from Z \to \RR$, and a Borel set $E \subseteq h(Z)$ satisfying the equiperfect condition of $g$, then 
+\[
+	g \circ f (x,C) = \int_Y g(-,h^{-1}(E))df(x,-) = f(x,Y) = 1.
+\]
+
+To talk about probability measures in our new 
+context, we can define 
+$\cat{PProb}$ to be the under-category 
+$1/\cat{PStoch}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Regular conditional probabilities}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+When working with finite spaces, we define 
+conditional probability, that is the 
+probability of $x$ given $y$, to be
+\[
+p(x|y) = p(x \cap y)/p(y).
+\]
+This is called Bayes formula.  Of course, it 
+only makes sense when $p(y) \neq 
+0$, but this is fine in practice since you'd 
+only ask for $p(x|y)$ when $p(y) 
+\neq 0$. There are additional subtleties that 
+arise when doing probability 
+theory over arbitrary measurable spaces. In 
+many infinite probability spaces, 
+singletons will have no measure, rendering 
+Bayes formula nearly useless. 
+
+Regular conditional probabilities allow us to 
+attach a meaningful value 
+to conditional events, even if the known event 
+has no measure. There are a 
+number of distinct concepts that go by the 
+name of regular conditional 
+probability, each involving a stochastic map 
+$(X,\Sigma) \to (X',\Sigma')$, a 
+probability on the domain, and some condition 
+to be satisfied. We will avoid 
+defining any of the concepts here since it 
+will not benefit our exposition.  
+
+Faden \cite{Faden_ExistRegCondProbs} finds 
+necessary and sufficient conditions 
+for the existence of each regular conditional 
+probability and for equivalence 
+between the various concepts.  In particular, 
+he shows in Theorem 6 that for 
+perfect probability measures on countably 
+generated measure spaces, the 
+definitions are equivalent and regular 
+conditional probabilities exist. From 
+this existence, the next theorem follows.
+
+\begin{thm} \label{thm.joint prob gives map btwn marginals}
+In the category $\cat{PProb}$, if given a 
+joint probability $j \from 1 \to (X 
+\times X',\Sigma \otimes \Sigma')$ with 
+marginals $p$ and $p'$, there is an 
+arrow $f$ such that
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & {1} \ar[dl,swap,"p"] \ar[dr,"p'"] & {} \\
+{(X,\Sigma)} & {} & {(X',\Sigma')} \ar[ll,dashed,"f" ]
+\end{tikzcd}
+\]
+and $j(A \times A') = \int_{A'}f(-,A)dp'(\ast,-)$.	Moreover, $f$ is unique $p'$-almost everywhere.
+\end{thm}
+ 
+The next theorem goes a bit further than 
+Theorem \ref{thm.joint prob gives map 
+btwn marginals} by showing that $f$ actually 
+factors through the product 
+measurable space.  The proof can be found in 
+Theorem 3.2 of 
+\cite{CulbSturtz_CategoricalBayesProb}.
+
+\begin{thm} \label{thm.marginals factr thru product}
+In the category $\cat{PProb}$, if given a 
+joint probability $j \from 1 \to (X 
+\times X',\Sigma \otimes \Sigma')$ with 
+marginals $p$ and $p'$, there are 
+arrows $g$ and $g'$ such that
+\[
+\begin{tikzcd}
+{} & 
+{1} \ar[d,"j"] \ar[ddl,swap,bend right=30,"p"] \ar[ddr,bend left=30,"p'"] & 
+{} \\
+{} & 
+{(X \times X',\Sigma \otimes \Sigma')} \ar[dl,swap,shift right=.75,"\delta_{\pi}"] \ar[dr,shift left=.75,"\delta_{\pi'}"] & 
+{} \\
+{(X,\Sigma)} \ar[ur,dashed,shift 
+right=.75,swap,"g"] & 
+{} & 
+{(X',\Sigma')} \ar[ul,dashed, shift 
+left=.75,"g'" ]
+\end{tikzcd}
+\]
+and
+\[
+	\int_A (\delta_\pi \circ g)(-,A')dp(\ast,-)
+		= j(A \times A')
+		= \int_{A'} (\delta_{\pi'} \circ 
+		g')(-,A)dp'(\ast,-).
+\]
+\end{thm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The category of perfect probability measures.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Here, we will investigate some of the properties of $\cat{PProb}$.  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{A variation on the Giry monad} \label{subsec.giry monad}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The functor $\delta$ (see equation \eqref{eq.deterministic functor}) is important for more than just providing a wealth of $\cat{Stoch}$-morphisms.  It is half of the adjunction from which the Giry monad arises! 
+
+\begin{defn}[Giry monad]
+	The \emph{Giry monad} $G \from \cat{Meas} \to \cat{Meas}$ maps a measurable space $(X,\Sigma)$ to the set $GX$ of all probability measures on $(X,\Sigma)$ paired with the smallest $\sigma$-algebra so that the evaluation maps
+	\[
+	\ev_A \from GX \to [0,1], \quad m \mapsto m(A)
+	\]
+	are measurable for every $A \in \Sigma$. To turn $G$ into a monad, we equip it with unit
+	\[
+	\eta_{(X,\Sigma)} \from (X,\Sigma) \to G(X,\Sigma),
+	\] 
+	that sends $x$ to its point measure and the multiplication 
+	\[
+	\mu_{(X,\Sigma)} \from GG(X,\Sigma) \to G(X,\Sigma),\quad
+	\mu_{(X,\Sigma)}(m)(A) = \int_{GX} \ev_A dm
+	\] 
+	for each probability measure $m \from G(X,\Sigma) \to [0,1]$.
+\end{defn}
+
+Along with introducing this monad, Giry \cite{Giry_GiryMonad} also showed that $\cat{Stoch}$ is the Kleisli category of the Giry monad. This is well known enough, so we will instead discuss a slight variation: the perfect Giry monad. To construct the perfect Giry monad, we will adjust the adjoint pair making the Giry monad.
+
+The first functor of our adjoint pair is simply the evident restriction of $\delta$, which we will still denote in the same manner. 
+
+\begin{lem}
+	There is an identity on objects functor $\delta \from \cat{CGMeas} \to \cat{PStoch}$ given $f \mapsto \delta_f$.
+\end{lem} 
+\begin{proof}
+	This follows from Theorem \ref{Thm.Perfect Prob Measure Facts} parts \ref{thm.perfect prob fact deterministic is perfect} and \ref{thm.perfect prob fact composition}.
+\end{proof}
+
+\begin{lem}
+	Define $\epsilon \from \cat{PStoch} \to \cat{CGMeas}$ as follows. For any measurable space $(X,\Sigma)$, let $\epsilon(X,\Sigma)$ be the measurable space consisting of the set $\epsilon (X)$ of all perfect probability measures on $(X,\Sigma)$ equipped with the weakest $\sigma$-algebra so that the evaluation map 
+	\[
+	\ev_A \from \epsilon (X) \to [0,1], \quad
+	p \mapsto p(A)
+	\]
+	is measurable for every $A \in \Sigma$. Given a perfect stochastic map $f \from (X,\Sigma) \to (X',\Sigma')$, define $\epsilon f \from \epsilon(X,\Sigma) \to \epsilon(X',\Sigma')$ by $p \mapsto f \circ p$. Then $\epsilon$ is a functor.
+\end{lem}
+\begin{proof}
+	First, we show that $\epsilon (X,\Sigma)$ is countably generated.  Recall that the Borel $\sigma$-algebra on $[0,1]$ is generated by sets $[0,a]$, for rational points $a$ in the unit interval.  Let $\{A_i\}_I$ be a countable collection generating $\Sigma$.  Then $\epsilon (\Sigma)$ is generated by $\{\ev_{A_i}^{-1}([0,a])\}$ as $i$ runs through $I$ and $a$ through rationals in $[0,1]$. 
+	
+	Next, we show that $\epsilon f$ is well-defined and measurable. The former holds because $f \circ p$ is a $\cat{PStoch}$-morphism. To show that latter, start by taking a generator $\ev_B^{-1}[0,a]$ of $\epsilon \Sigma'$. This generator consists of all perfect probability measures $p' \from \Sigma' \to [0,1]$ such that $p'(B) \leq a$. Then $(\epsilon f)^{-1}(\ev_B^{-1}[0,a])$ consists of all probability measures $p \from \Sigma \to [0,1]$ such that 
+	\[
+		(\epsilon f)(p)(B) = f \circ p (B) = \int_X f(-,B)dp \leq a. 
+	\]
+	Because $f(-,B)$ is measurable, choose a non-decreasing sequence $f_n$ of simple functions converging uniformly to $f(-,B)$.  Then
+	\begin{equation} \label{eq.show its measurable}
+		(\epsilon f)^{-1}( \ev_B^{-1}[0,a] ) 
+			= \bigcap_{n =1}^{\infty} \left\{ p : \int_X f_n dp \leq a \right\}.
+	\end{equation}
+	 Observe that for any $A \in \Sigma$, the function 
+	 \[
+		 \int_X \chi_A d(-) \from \epsilon (X,\Sigma) \to [0,1], \quad
+		 p \mapsto \int_X \chi_A dp = p(A)		 
+	\]
+	 is exactly the evaluation map $\ev_A$, hence measurable by construction. It follows that each $\int_X f_n d(-)$ is a linear combination of the evaluation functions, hence is measurable. Therefore \eqref{eq.show its measurable} is a countable intersection of measurable functions and so belongs to $\Sigma$. 
+	 
+	 We've shown that $\epsilon$ is well-defined.  It remains to show that it is actually a functor.  Composition follows from associativity of stochastic maps: 
+	 \[
+		 \epsilon (g f)(p) 
+			 = (g f)p 
+			 = g (f p)
+			 = \epsilon (g) \epsilon (f) (p).
+	 \]
+	 And identities are preserved: $\epsilon (\id)(p) = \int_X \id(-,-) dp$ is the measure that maps $A$ to $\int_X \id(-,A) dp = \int_A dp = p(A)$.
+\end{proof}
+
+\begin{lem}
+	There are natural transformations 
+	\begin{enumerate}
+		\item $\eta \from 1 \to \epsilon \delta$ made of measurable functions
+		\[
+		\eta_{(X,\Sigma)} \from (X,\Sigma) \to \epsilon (X,\Sigma)
+		\]
+		assigning to each $x \in X$, the probability measure $A \mapsto \chi_A (x)$, where $\chi_A$ is the characteristic function of $A$; and
+		\item $\ev \from \delta \epsilon \to 1$ made of stochastic maps 
+		\[
+			\ev_{(X,\Sigma)} \from \epsilon (X,\Sigma) \to (X,\Sigma)
+		\]
+		assigning $(p,A) \mapsto p(A)$.
+	\end{enumerate}
+\end{lem}
+
+\begin{thm}
+	The data $(\delta, \epsilon, \eta, \ev)$ form an adjunction.
+\end{thm}
+\begin{proof}
+	Consider the composite 
+	\begin{equation} \label{eq.adjoint composite 1}
+		\epsilon (X,\Sigma) \xto{\eta_{(X,\Sigma)}}
+		\epsilon \epsilon (X,\Sigma) \xto{\epsilon (\ev_{(X,\Sigma)})}
+		\epsilon (X,\Sigma).
+	\end{equation}
+	Denote by $p'$ the image of a perfect probability measure $p$ under $\eta_{(X,\Sigma)}$. That is, $p'$ is the $\cat{PStoch}$-map $p' \from 1 \to \epsilon (X,\Sigma)$ given by $(\ast,B) \mapsto \chi_B (p)$. Then $\epsilon (\ev) (p')$ is the $\cat{PStoch}$-composite $\ev \circ p'$ given by
+	\[
+		(\ast,A) \mapsto \int_{\epsilon X} \ev (-,A)dp'(\ast,-) = p(A)
+	\]
+	 Hence \eqref{eq.adjoint composite 1} is the identity.
+	
+	Next, the composite 
+	\begin{equation} \label{eq.adjoint composite 2}
+	(X,\Sigma) \xto{\delta (\eta_{(X,\Sigma)})}
+	\epsilon (X,\Sigma) \xto{\ev_{(X,\Sigma)}}
+	(X,\Sigma).
+	\end{equation}
+	is the $\cat{PStoch}$-map $X \times \Sigma \to [0,1]$ given by
+	\[
+		(x,A) \mapsto \int_{\epsilon X} \ev_{(X,\Sigma)}(-,A)d\delta (\eta_{(X,\Sigma)})(x,-) = \chi_A (x).
+	\]
+	 Hence \eqref{eq.adjoint composite 2} is the identity.
+\end{proof}
+
+\begin{defn}
+	The \emph{perfect Giry monad} $G \from \cat{CGMeas} \to\cat{CGMeas}$ is given by the adunction $(\delta, \epsilon, \eta, \ev)$.
+\end{defn}
+
+\begin{thm}
+	The Kleisli category $\cat{K}(G)$ for the perfect Giry monad $G$ is isomorphic to $\cat{PStoch}$.
+\end{thm}
+\begin{proof}
+	The Kleisli category $\cat{K}(G)$ has the 
+	same objects as $\cat{PStoch}$ 
+	and from the adjunction, we have that 
+	\begin{align*}
+		\cat{PStoch}((X,\Sigma),(X',\Sigma')) 
+			& = 
+			\cat{PStoch}(\delta(X,\Sigma),(X',\Sigma'))
+			 \\
+			& \cong 
+			\cat{CGMeas}((X,\Sigma),\epsilon(X',\Sigma'))
+			 \\
+			& = 
+			\cat{K}(G)((X,\Sigma),(X',\Sigma')).
+	\end{align*}		
+\end{proof}
+
+
+{\color{red} EDIT BELOW HERE}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{A nice category of Bayesian 
+processes.} \label{sec.bayes processes}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Baez and Fritz \cite{BaezFritz_RelEntropy} 
+defined a category they called $\cat{FinStat}$ 
+in which they associated a relative entropy to 
+each object. We will define an analogous 
+category, but we will 
+try to make our context work for us and go 
+about defining our category a bit differently 
+than they did. Also, to emphasize the 
+connection to Bayesian processes -- a 
+connection that will be discussed at the end 
+of this section -- we will call 
+this category $\cat{PBayes}$. 
+
+\begin{defn} \label{def.PBayes}
+	Define a category $\cat{PBayes}$ with 
+	objects, 
+	perfect probability measures $p \from 1 
+	\to (X,\Sigma)$ on countably 
+	generated measure spaces and arrows, not 
+	necessarily commuting triangles
+	\[
+	\begin{tikzcd}[column sep=tiny]
+	{} & {1} \ar[dl,swap,"p"] \ar[dr,"q'"] & 
+	{} \\
+	{(X,\Sigma)} \ar[rr,"f"] & {} & 
+	{(X',\Sigma')} 
+	\end{tikzcd}
+	\]
+	in $\cat{PProb}$ where $q'$ is absolutely 
+	continuous with respect to $f 
+	\circ p$. 
+\end{defn} 
+
+The motivation to use 
+notation $q'$ instead of $q$ or $p'$ 
+will become apparent soon enough. Also, there 
+is quite a bit more information hiding inside 
+a $\cat{PBayes}$-morphism. To help us tease it 
+out, we give the following theorem.
+
+\begin{thm}[{\cite[Sec.~3.1]{CulbSturtz_CategoricalBayesProb}}]
+ \label{thm.Prob 
+then map gives joint}
+	Given a diagram 
+	\[
+	\begin{tikzcd}
+	1 \ar[r,"p"] & (X,\Sigma) \ar[r,"f"] & (X',\Sigma')
+	\end{tikzcd}
+	\]
+	in $\cat{PProb}$, there exists a joint 
+	measure $j \from 1 \to (X \times 
+	X',\Sigma \otimes \Sigma')$ uniquely 
+	determined by
+	\[
+	j (A \times A') = \int_A f(-,A')dp(\ast,-).
+	\]
+	The marginal of $j$ equals $f \circ p$. 
+	Moreover, both $j$ and $f \circ p$ are 
+	perfect. 
+\end{thm}
+
+For the following corollaries, let $q' \from 1 
+\to (X',\Sigma')$ and denote the marginal $f 
+\circ p$ by $p'$.
+
+\begin{cor}
+	There exists a $\cat{PProb}$-morphism $g 
+	\from (X',\Sigma') \to 
+	(X,\Sigma)$, unique $p'$-almost 
+	everywhere, such that $p=g \circ p'$.
+\end{cor}
+
+\begin{cor}
+	There exists a perfect probability 
+	measure $q \from 1 \to (X,\Sigma)$ such 
+	that $q=g \circ q'$ and $q \ll p$.
+\end{cor}
+
+Diagrammatically, we can capture a 
+$\cat{PBayes}$-morphism by
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & 
+{1} \ar[dl,"p"] \ar[dr,swap,"q'"] \ar[dr,bend left=30,dashed,"p'"] 
+\ar[dl,bend right=30,dashed,swap,"q"] & 
+{} \\
+{(X,\Sigma)} \ar[rr,"f"] & 
+{} & 
+{(X',\Sigma')} \ar[ll,dashed,bend left=15,"g"]
+\end{tikzcd}
+\]
+where $q' \ll p'$.  The solid arrows are 
+specified information and the dashed arrows 
+follow from our context.  Observe that $p=g 
+\circ p'= g \circ f \circ p$.
+
+An interesting case to consider are the 
+morphisms in $\cat{PBayes}$ such 
+that the diagram
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & {1} \ar[dl,swap,"p"] \ar[dr,"q'"] & {} \\
+{(X,\Sigma)} \ar[rr,"f"] & {} & {(X',\Sigma')} 
+\end{tikzcd}
+\]
+commutes? It is easy to see that the 
+collection of such morphisms gives a 
+subcategory $\cat{OPBayes}$ of optimal perfect 
+Bayesian processes. What is meant by optimal 
+will be explained in detail after we 
+introduce the concept of relative entropy. In 
+this case, we get a commuting diagram
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & 
+{1} \ar[dl,swap,"p=q"] \ar[dr,"p'=q'"] & 
+{} \\
+{(X,\Sigma)} \ar[rr,"f"] & 
+{} & 
+{(X',\Sigma')} \ar[ll,dashed,bend left=15,"g"]
+\end{tikzcd}
+\] 
+
+{\color{red} (THIS PARAGRAPH NEEDS WORK)}How 
+exactly is $\cat{PBayes}$ related to 
+Bayesian processes? In the 
+appendix, we recall the idea of a Bayesian 
+process.  Observe that here, 
+$(X,\Sigma)$ plays the role of the hypothesis, 
+$(X',\Sigma')$ the evidence, $p$ 
+plays the role of the prior data and $q$ the 
+posterior data. Every $\cat{PBayes}$-morphism 
+is like a single iteration in a Bayesian 
+updating process. Then an 
+$\cat{OPBayes}$-morphism is one in 
+which the best initial hypothesis is chosen, 
+the new evidence does not affect 
+the hypothesis.  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{The relative entropy of 
+$\cat{PBayes}$-morphisms.}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Given probability measures $q,p$ on a set $X$, where $q \ll p$, define the \textit{relative entropy} or \textit{Kullback-Leibler divergence} from $p$ to $q$ by
+\[
+S(q,p) = \int_X \log \left( \frac{dq}{dp} \right) \frac{dq}{dp} dp,
+\]
+where $\frac{dp}{dq}$ is the Radon-Nikodym derivative. This value is an attempt to measure the difference between the probability measures. For us, it will measure the amount of information gained by updating from a prior probability to a posterior probability via a Bayesian process. 
+
+First, note this doesn't always exist for any two probability measures: we need the Radon-Nikodym derivative.  Also, this is not a metric: there is no symmetry, for instance.  
+
+However, to every $\cat{PBayes}$-morphism 
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & 
+{1} \ar[dl,"p"] \ar[dr,swap,"q'"] \ar[dr,bend left=30,dashed,"p'"] 
+\ar[dl,bend right=30,dashed,swap,"q"] & 
+{} \\
+{(X,\Sigma)} \ar[rr,"f"] & 
+{} & 
+{(X',\Sigma')} \ar[ll,dashed,bend left=15,"g"]
+\end{tikzcd}
+\]
+we can associate a relative entropy $S(q,p)$ to $q$ with respect to $p$.  Because all probability spaces are countably generated and $q \ll p$, we satisfy the requisite conditions for the Radon-Nikodym derivative to exist.  
+
+Observe that because $p=q$ on 
+$\cat{OPBayes}$-morphisms, we have that 
+$dq/dp=1$. 
+Hence $S(q,p)=0$. This is the sense in which 
+these morphisms are optimal.  
+There is no new information to be gained by 
+updating your probability measure 
+from $p$ to $q$. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{TO DO.}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+	\item Prove relative entropy is the functor with the properties.
+	\item find nice properties of the various categories used. Particularly, PProb and PBayes. Are there arbitrary products or just countable?  Co-products? 
+	\item Properties of CGMeas.  Is $\delta$ symettric monoidal functor?  How about $\epsilon$.  
+	\item Can we characterize (split)epis and (Split)monos?  Kenny did so already in the finite case (see that old email thread).
+	\item Is perfect probability spaces the best category to work in?  What properties do we care about? Does perfect probs satisfy all of them?
+	\item Put names giving credit to definitions definitions 
+	\item Can we drop the absolute continuity condition?  How do we define relative entropy in this case?  
+	\item Is $\cat{PProb}$ isomrophic to the subcategory of $\cat{PProb}$?
+	\item Update bibliography to Baez's style (see email thread)
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{comment}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Appendix.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+On Dr. Baez's Relative Entropy blog, we see a number of categories defined.  
+All of these use sets in their recipes, and in particular, finite sets only.  
+Here we generalize these categories to allow for arbitrary sets.
+
+In measure theory, we study ways to assign some meaningful notion of 
+\textit{size} to subsets of some set $X$.  The prototypical example is 
+assigning intervals in $\RR$ their length.  Moreover, we want to define this 
+notion of size in such a way that it is compatible with taking unions and 
+complements of subsets of $X$.  It is natural to first consider assigning a 
+size to every element in the power set $2^X$.  In case $X$ is finite, this is 
+fine, and in fact captures every way to assign a size to subsets. However, when 
+$X$ is infinite, some more finesse is required. 
+
+So, before we start talking about the categories of interest, let's recall some 
+basic notions from measure theory that will be used throughout.  A 
+\emph{$\sigma$-algebra} $\Sigma$ defined on a set $X$ is a non-empty collection 
+of subsets of $X$ closed under countable union and compliments.  Then a pair 
+$(X,\Sigma)$ consisting of a set and a $\sigma$-algebra on it is called a 
+\emph{measurable space}. A morphism of measurable spaces, or \emph{measurable 
+	function}, is one such that the inverse image of a measurable set is measurable.
+A \emph{measure} is a map $m \from \Sigma \to [0,\infty]$ such that $\emptyset 
+\mapsto 0$ and $m(\cup_{k=1}^\infty E_k = \sum_{k=1}^{\infty} m(E_k)$ for 
+disjoint sets $E_i \subseteq \Sigma$. In case the entire set has measure $1$, 
+we call this a \emph{probability measure}. Then a triple, consisting of a set 
+$X$, a $\sigma$-algebra $\Sigma$ on $X$ and a measure $m \from \Sigma \to 
+[0,\infty]$ is called a \emph{measure space}.  An example of a measureable 
+space is the power set, but this turns out to not be very flexible in that it 
+does not accept many different measures when the set is infinite.  
+
+For good measure, let's include some basic probability theory too. Given a probability space $(X,\Sigma_X, m)$ and a measurable space $(Y,\Sigma_Y)$, a  \emph{$(Y,\Sigma_Y)$-random variable} $f$ is a measurable function $f \from (X,\Sigma_X, m) \to (Y,\Sigma_Y)$.  Now, given a random variable $f \from (X,\Sigma_X, m) \to (Y,\Sigma_Y)$, a \emph{probability distribution} is the push-forward measure $f_\ast m$ on $(Y,\Sigma_Y)$. Maybe, I'll take as the definition of a random variable a measurable function $f \from (X,\Sigma_X,m) \to (Y,\Sigma_Y,f_\ast m)$, since we really get the measure $f_\ast m$ for free. The \emph{expected value} of a random variable $f \from (X,\Sigma_X,m) \to (Y,\Sigma_Y,f_\ast m)$ is computed by the integral 
+\[
+E[X] \coloneqq \int_Y fdf_\ast m
+\]
+
+\begin{defn}
+	Let $(X,\Sigma,p)$ be a probability space. $(X',\Sigma')$ be a measurable space, and $f \from X \to X'$ be a measurable function. A \emph{regular conditional probability} with respect to $f$ is a stochastic map $\nu \from (X',\Sigma') \to (X,\Sigma)$ such that 
+	\[
+	p(A \cap f^{-1}(A')) = \int_{A'} \nu(x,A)df_\ast p(x)
+	\]
+	for all $A \in \Sigma$ and $A' \in \Sigma'$. A measurable space $(X,\Sigma)$ is said to have the regular conditional probability property if for all probability measures $p$ for $(X,\Sigma)$, any measurable function on $(X,\Sigma,p)$ admits a regular conditional probability. See Theorem 3 in \cite{Faden-RegCondProbs} for a comparison between this and the other regular conditional concepts.  
+\end{defn}
+
+This really is only meaningful for $x$ in the topological support of the pushforward measure $f_\ast p$.  
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\section*{A second nice category of Bayesian processes.}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We will now define another category that we hope to use in our new characterization for relative entropy.  We will essentially use the category $\cat{PRel}$ from \cite{ABP-NucTrcIdeals}, however, change some of the assumptions to match ours.  
+
+\begin{defn}
+	The category $\cat{PrftPRel}$ has objects countably generate, perfect probability measures $(X,\Sigma,p)$ and arrows $f \from (X,\Sigma,p) \to (X',\Sigma',p')$ are joint probability measures on $(X \times X',\Sigma \otimes \Sigma')$ whose marginals are absolutely continuous with respect to $p$ and $p'$.
+\end{defn}
+
+Using Theorem \ref{Thm.Perfect Prob Measure Facts}, we know that the marginals are perfect. Really, a morphism is a diagram
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & 
+{1} \ar[dl,"p"] \ar[dr,swap,"p'"] \ar[dr,bend left=30,dashed,"q'"] 
+\ar[dl,bend right=30,dashed,swap,"q"] & 
+{} \\
+{(X,\Sigma)} \ar[rr,dashed,"f"] & 
+{} & 
+{(X',\Sigma')} \ar[ll,dashed,bend left=15,"g"]
+\end{tikzcd}
+\]
+where $q,q'$ are the marginals of some joint measure on $(X \times X',\Sigma \otimes \Sigma')$ such that $q \ll p$ and $q' \ll p'$. Also, $f,g$ are maps such that 
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\section*{A brief history of optimal morphisms.}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Finding a categorical framework for probability theory started with Lawvere \cite{Lawvere-Cat of Prob Maps} and was developed further by his student Giry \cite{Giry-Giry Monad} where she defined what came to be known as the Giry monad.  Recall this monad $G \from \cat{Meas} \to \cat{Meas}$ sends a measurable space $(X,\Sigma)$ to the set of all probability measures $p$ on $X$ equipped with the weakest $\sigma$-algebra such that the evaluation maps $p \mapsto p(A)$ are all measurable.  Some smart people noticed that this Giry monad seemed quite a lot like the power-set monad on $\cat{Sets}$.  It's well known that the Kleisli category for the power set monad is the category $\cat{Rel}$ of relations. A natural question to ask is whether the Kleisli category for the Giry monad -- we've already seen that this is $\cat{Stoch}$ -- is something like a category of relations.  
+
+This question was explored in \cite{ABP-NucTrcIdeals} and \cite{Panan-ProbRels}. Particularly, it was shown in \cite{ABP-NucTrcIdeals} that $\cat{Stoch}$ was not very much like $\cat{Rel}$. So they defined a further category called $\cat{PRel}$ which is more like $\cat{Rel}$ and has some very nice properties as well. It turns out that $\cat{PRel}$ and $\cat{OptPrftStat}$ are very closely related.
+
+\begin{defn}
+Define a category $\cat{PRel}$ whose objects are countably generated, perfect probability spaces $(X,\Sigma,p)$ and arrows $f \from (X,\Sigma,p) \to (X',\Sigma',p')$ are perfect probability measures on $(X \times X',\Sigma \otimes \Sigma')$ whose marginals are absolutely continuous with respect to $p$ and $p'$.
+\end{defn}
+
+Actually, $\cat{PRel}$ was defined to use Polish spaces with their Borel  $\sigma$-subalgebras but we changed these assumptions to match our own choices. In fact, we could have used Polish spaces to define our categories, but opted for the larger class of countably generated, perfect probability measures which includes, for instance, Radon measures. 
+
+Using Theorem \ref{thm.Marginals factr thru product}, we can take a morphism in $\cat{PRel}$, that is a joint probability $j$ with marginals $p,p'$, and turn it into a triangle 
+\[
+\begin{tikzcd}[column sep=tiny]
+{} & 
+{1} \ar[dl,swap,"p"] \ar[dr,"p'"] & 
+{} \\
+{(X,\Sigma)} \ar[rr,"f"] & 
+{} & 
+{(X',\Sigma')} \ar[ll,dashed,bend left=15,"g"]
+\end{tikzcd}
+\] 
+that commutes in the clockwise and counter-clockwise directions and such that . But this is simply a morphism in $\cat{OptPrftStat}$. 
+
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\section*{The category $\cat{Stat}$ directly following Baez, Fritz.}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now, we're going to start with $\cat{PerfProb}$ and add a bit more structure. Consider non-commuting diagrams
+\[
+\begin{tikzcd}
+{} & 1 \ar[dl,"p"] \ar[dr,"p'"] & \\
+(X,\Sigma) \ar[rr,bend right=10,"\delta_f"] & {} & (X',\Sigma') 
+\ar[ll,bend right=10,swap,"s"]
+\end{tikzcd}
+\]
+that satisfy 
+\[
+	p;\delta_f=p' \t{ and } s;\delta_f=id_{(X',\Sigma')}.
+\]
+The first condition gives us that $\delta_f$ is a measure preserving function, as in $\cat{PerfProb}$.  The second condition tells us that $s$ is a section. 
+
+What is the point of this setup? Think of $(X,\Sigma)$ as a set of states that some system can occupy and $p$ as a probability distribution on these states.  Then think of $(X',\Sigma')$ as a set of possible observations one can make about these states -- this can be like a machine that somehow measures the system.  Then $p'$ is a probability distribution on the outcomes. The deterministic map $\delta_f$ is the `rule' that assigns a measure to a given state. So if you measure the system while it's in state $x$, the measurement reads $f(x)$.  That $\delta_f$ is deterministic is akin to there being no noise around the measurement process. Finally, $s$ is to be thought of as making a hypothesis. That is, given some measurement of the system that you've taken, $s$ is a guess about what state the system was in to give that reading.  
+
+The equations also have a meaningful interpretation along these lines.  Requiring $p;\delta_f=p'$ ensures that the probability on our measurement readings is derived from the probability on the system and the rule governing the readings. Second, $s;\delta_f =id_{(X',\Sigma')}$ means, as stated above, that $\delta_f$ is an epimorphism. However, in 
+
+We should probably check that this means that every $y \in Y$ has a non-zero chance of being hit by $\delta_f$.  But if so, then this means that every possible measurement occurs with non-zero probability.  In particular, the fibres of $y$, which because $\delta_f$ is deterministic is the usual sense of the word, consists of possibly many states $x$ that give $f$-measurement $y$, that is $f(x)=y$.  Then $s$ sends $y \mapsto x$ with non-zero possibility only if $x$ is the the fibre of $y$ -- rather state $x$ would cause an $f$-measurement of $y$. 
+
+Composition considers a diagram 
+\[
+\begin{tikzcd}
+{} & 
+1 \ar[dl,"p_X"] \ar[dr,"p_Z"] \ar[d,"p_Y"]& 
+{} \\
+(X,\Sigma_X) \ar[r,bend right=10,"\delta_f"] & 
+(Y,\Sigma_Y) \ar[l,bend right=10,swap,"s"] \ar[r,bend right=10,"\delta_g"]&
+(Z,\Sigma_Z) \ar[l,bend right=10,swap,"r"]
+\end{tikzcd}
+=
+\begin{tikzcd}
+{} & 1 \ar[dl,"p_X"] \ar[dr,"p_Z"] & \\
+(X,\Sigma_X) \ar[rr,bend right=10,"\delta_{f;g}"] & {} & (Z,\Sigma_Z) 
+\ar[ll,bend right=10,swap,"r;s"]
+\end{tikzcd}
+\]
+such that the equations required by each separate morphism hold.  First, observe
+\[
+\delta_f;\delta_g (x,C) 
+= \int_Y \delta_g(-,C)d\delta_f(x,-)
+= \int_{g^{-1}(C)}d\delta_f(x,-)
+= \begin{cases}
+1, & \t{ if } f(x) \in g^{-1}(C),\\
+0, & \t{ if } f(x) \notin g^{-1}(C)\\
+\end{cases}
+\]
+and this coincides with $\delta_{f;g}$.  So we get the first required equation
+\[
+p_X;\delta_{f;g}=p_X;\delta_f;\delta_g = p_Y;\delta_g=p_Z
+\]
+and the second equation
+\[
+r;s;\delta_{f;g}=r;s;\delta_f;\delta_g=r;1_Y;\delta_g=1_Z.
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{The subcategory in $\cat{Stat}$ of optimal hypotheses.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We define a subcategory $\cat{FP}$ inside $\cat{Stat}$ consisting of morphisms
+\[
+\begin{tikzcd}
+	{} & 1 \ar[dl,"p_X"] \ar[dr,"p_Y"] & \\
+	(X,\Sigma_X) \ar[rr,bend right=10,"\delta_{f;g}"] & {} & (Y,\Sigma_Y) 
+	\ar[ll,bend right=10,swap,"r;s"]
+\end{tikzcd}
+\]
+with the usual equations plus the added condition that $p=q;r$.  We say, in this case, that the hypothesis $s$ is \textit{optimal}. It's straightforward to check this is a subcategory.
+
+This means that $s$ is a measure-preserving map and that we can infer the correct probability distribution $p_X$ on the states $(X,\Sigma_X)$ from $p_Y$. Mathematically, this means that $p_X$ is the push-forward probability distribution of $p_Y$ along $s$.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{The subcategory of optimal hypotheses compared to $\cat{Prob}$.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+At this point in Baez,Fritz (the also mention Leinster), they go into comparing $\cat{FP}$ to $\cat{FinProb}$ saying that the data
+\[
+\begin{tikzcd}
+{} & 1 \ar[dl,"p_X"] \ar[dr,"p_Y"] & \\
+(X,\Sigma_X) \ar[rr,"\delta_{f}"] & {} & (Y,\Sigma_Y) 
+\end{tikzcd}
+\]
+determines a map $s \from Y \to X$ that, when stuck into the diagram, makes it optimal.  However, this relies on their context: finite sets and power set $\sigma$-algebras.  Thus, the values of $s$, which is represented by a matrix, are easily found.  However, when generalizing as we are, working behind integrals instead of sums, and not having point measures increase the of defining $s$ from the data given in a $\cat{Prob}$-morphism.  
+
+Let's turn to some different related treatments and see what turns up. Before we do, let's include an important concept that will be used below.  A \textit{regular conditional probability distribution} is a way to define condition probabilities on continuous distributions so that meaningful outputs are attached when assuming a probability of $0$ measure, e.g. what is the probability of $B$ occuing given ${x}$, when usually singletons are probabilistically null in continuous measures.  {\color{red} Define this properly later}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{Abramsky, Blute, Panangaden -- Tensored $\ast$-Categories.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+They observe the analogy between the fact that the Giry monad has as its Kleisli category $\cat{Stoch}$ and the power set monad has as its Kleisli category $\cat{Rel}$. The motivation for making this comparison between Kleisli categories is the similarity between monads. The authors note that $\cat{Stoch}$ is not enough like relations, in that converses don't naturally exist.  So the following describes their endeavor to re-mold $\cat{Stoch}$ so that it becomes more relation-like. This will require us to look closer at products.
+
+For quick reading, I'll bullet point some facts.
+\begin{itemize}
+	\item Given data $1 \xto{p} (X,\Sigma_X) \xto{h} (Y,\Sigma_Y)$ in $\cat{Stoch}$, there is a unique measure \textit{(not necessarily probability?)} on $(X \times Y,\Sigma_X \otimes \Sigma_Y)$ such that
+	\[
+	q(A \times B) = \int_A h(x,B)dp(\ast,-).
+	\]
+	\item Given data
+	\[
+	\begin{tikzcd}
+	{} & 1 \ar[dl,"p_X"] \ar[dr,"p_Y"] & \\
+	(X,\Sigma_X) \ar[rr,bend left=10,"f"] & {} & (Y,\Sigma_Y) \ar[ll,bend left=10,"g"]
+	\end{tikzcd}
+	\]
+	that satisfies some evident conditions \textit{(what conditions?)} in $\cat{Stoch}$, we get a unique probability measure $p \from 1 \to (X \times Y,\Sigma_X \otimes \Sigma_Y)$ that are compatible with the marginal probabilities.
+\end{itemize}
+The idea is that the marginals serve as a line of communication between measures on the product space $X \times Y$ and stochastic maps between $X$ and $Y$.  
+
+I'll stop beating around the bush and just state the theorem and the corollary, which is our primary interest.
+
+\begin{thm}
+	Given the data in $\cat{Stoch}$:
+	\[
+	\begin{tikzcd}
+	{} & {1} \ar[d,"p"] & {} \\ 
+	{} & {(X,\Sigma_X)} \ar[dr,"\delta_f"] \ar[dl,"\delta_g"]& {} \\ 
+	{(Y,\Sigma_Y)} & {} & {(Z,\Sigma_Z)}
+	\end{tikzcd}
+	\]
+	where $(Z,\Sigma_Z)$ is Polish with a Borel $\sigma$-algebra and $f,g$ are measurable functions, then there is a stochastic map $h \from Y \to Z$  such that the diagram commutes and
+	\[
+	\int_{g^{-1}(B)}h(g(x),C)dp(\ast,-) = p(\ast,f^{-1}(C) \cap g^{-1}(B)).
+	\]
+\end{thm}
+
+The corollary we care about is this.
+
+\begin{cor}
+	Given Polish space $X,Y$ with Borel $\sigma$-algebras and a probability distribution $\alpha \from 1 \to X \times Y$, there exist stochastic maps \[h \from X \to Y \t{ and } k \from Y \to X\] such that \[\int_A h(x,B)d\alpha_X = \alpha (A \times B) = \int_B k(y,A)d\alpha_Y, \] where $\alpha_X$ and $\alpha_Y$ are the marginals.
+\end{cor}
+
+Now, let's define the category $\cat{PRel}$ whose objects are probability distributions $1 \to (X,\Sigma_X)$ on Polish spaces with their Borel $\sigma$-algebra and morphisms $(X,\Sigma,p) \to (X',\Sigma',p')$ are the probability measures $q \from 1 \to (X \times X', \Sigma \otimes \Sigma')$ whose marginals $\delta_{\pi}, \delta_{\pi'}$ are absolutely continuous with respect to $p,p'$.  
+
+Note that absolute continuity means there are Radon-Nikodym derivatives $dq/dp$ and $dq/dp'$ such that $q = \int (dq/dp)dp = \int (dq/dp')dp'$. 
+
+Composition in this category is as follows: given $(X,\Sigma_X,p_X) \xto{f} (Y,\Sigma_Y,p_Y) \xto{g} (Z,\Sigma_Z,p_Z)$ we have that $f \from 1 \to \Sigma_X \otimes \Sigma_Y$ and $g \from 1 \to \Sigma_Y \otimes \Sigma_Z$ are probability measures and so induce stochastic maps $f' \from (X,\Sigma_X) \to (Z,\Sigma_Y)$ and $g' \from (Y,\Sigma_Y) \to (Z,\Sigma_Z)$.  We compose these to obtain the stochastic map $f';g' \from (X,\Sigma_X) \to (Z,\Sigma_Z)$. Finally $f';g'$ provides a measure on $X \times Z$ via the formula $f;g (A \times C) = \int_A f';g' (x,C)dp_X(\ast,-)$.
+
+Soon enough, we'll try to compare this to the category of optimal hypothesis discussed before.  But first, we'll look into another related take on all of this.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{J.C., K.S. -- A Categorical Foundation for Bayesian Probability}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+These fellas work with countably generated measure spaces and perfect probability measures to ensure the existence of regular conditional probability measures. 
+
+A \textit{perfect} measure $\mu$ on a space $(X,\Sigma_X)$ is one so that, for any measurable function $f \from X \to \RR$, there is a Borel set $E \subseteq f(X)$ such that $\mu(f^{-1}(E))=\mu(X)$. Some basic facts about perfect measure spaces are list in the paper, Theorem 2.2.  We can form the category $\cat{PerfProp}$ of perfect probability maps with countably generated measurable spaces as objects and morphisms are stochastic maps $f \from X \to Y$ as usual with the stronger requirement that the collection $\{f(x,-)\}_{x \in X}$ is equiperfect, that is given any measurable function $g \from X \to \RR$, there is a single Borel set $E \subseteq g(X)$ such that $f(x,-)(g^{-1}(E))=f(x,-)(X)$ for all $x \in X$.  Composition is the same as usual, and it is well-defined.  Also, we think of measurable functions as perfect stochastic functions in the same way.  
+
+We will do the same sort of thing as Abramsky, Blute and Panagaden did, but with sufficient differences to warrent mentioning.  First of all, $\cat{PerfProb}$ does not have products since uniqueness fails. But, we will still, for lack of better terminology, refer to a measurable space $(\prod X_i, \bigotimes_i \Sigma_i)$ as a product space.  Given a probability measure $j \from 1 \to (\prod X_i, \bigotimes_i \Sigma_i)$, we get the marginal
+\[
+\begin{tikzcd}
+{} & {1} \ar[d,"j"] \ar[dl,"J;\delta_{\pi_j}"] \\ {X_k} & {(\prod X_i, \bigotimes_i \Sigma_i)} \ar[l,"\delta_{\pi_j}"]
+\end{tikzcd}
+\]  
+The thing is, given probability measures on the components, there are many possible joint measures on the product space.  In order to attribute a joint probability measure uniquely, we need more information, namely relations between the marginals which take the form of conditional probabilities.   
+
+Given marginal probability measures and conditionals, we now show how to get a joint distribution.  This largely follows Ab.-Blt.-Pan.  
+
+The first thing to notice is that given a diagram $1 \xto{p_X} X \xto{f} Y$ in $\cat{PerfProp}$, we can get a joint probability $J_f \from 1 \to X \times Y$  given by $J_f(A \times B) = \int_A f(-,B)dp_X(\ast,-)$. Symmetrically, we can start with $1 \xto{p_Y} Y \xto{g} X$ and get a joint probability $J_g$. Given $p_X,p_Y,f,g$, we get joint probabilities $J_f$,$J_G$ as shown in
+\[
+\begin{tikzcd}
+{} & {1} \ar[ddl,"p_X"] \ar[d,swap,dashed,shift right=.5,"J_f"] \ar[d,dashed,shift right=-.5,"J_g"] \ar[ddr,"p_Y"] & {} \\
+{} & {X \times Y} \ar[dl,"\delta_{\pi_X}"] \ar[dr,"\delta_{\pi_Y}"]& {} \\
+{X} \ar[rr,shift left=.5,"f"]& {} & {Y} \ar[ll,shift left=.5,"g"]\\
+\end{tikzcd}
+\]
+then we have that $J_f=J_g$ if and only if both compatibility conditions $p_X=p_y;g$ and $p_Y=p_X;f$ hold. Therefore, whenever we have these compatibility conditions, we get a unique joint probability $J \from 1 \to X \times Y$ given by \[ \int_A f(-,B)dp_X(\ast,-) = J(A \times B) = \int_B g(-,A)dp_Y(\ast,-).\]
+
+We have a converse to this construction too.  Given a joint probability $J \from 1 \to X \times Y$, with marginals $p_X$ and $p_Y$, then there are $\cat{PerfProb}$ maps $f \from X \to Y$ and $g \from Y \to X$ such that 
+\[
+\begin{tikzcd}
+{} & {1} \ar[dl,"p_X"] \ar[dr,"p_Y"] & {} \\ {X} \ar[rr,dashed,shift left=0.5,"f"] & {} & {Y} \ar[ll,dashed,shift left=0.5,"g"]
+\end{tikzcd}
+\]
+and $\int_B g(-,A)dp_Y(\ast,-)=J(A \times B) = \int_A f(-,B)dp_X(\ast,-)$. These maps are unique up to a null set.  
+
+We can now use these last two constructions. Given any joint distribution $J \from 1 \to X \times Y$ with marginals $p_X$ and $p_Y$, there are $\cat{PerfProb}$ arrows $f$ and $g$ such that
+\[
+\begin{tikzcd}
+{} & 
+{1} \ar[ddl,"p_X"] \ar[d,swap,dashed,shift right=.5,"J_f"] \ar[d,dashed,shift right=-.5,"J_g"] \ar[ddr,"p_Y"] & 
+{} \\
+{} & 
+{X \times Y} \ar[dl,shift left=0.5,"\delta_{\pi_X}"] \ar[dr,shift right=0.5,"\delta_{\pi_Y}"]& 
+{} \\
+{X} \ar[rr,shift left=.5,"f;\delta_{\pi_Y}"] \ar[ur,shift left=0.5,dashed,"f"]& 
+{} & 
+{Y} \ar[ll,shift left=.5,"g;\delta_{\pi_X}"] \ar[ul,shift right=0.5,dashed,"g"]\\
+\end{tikzcd}
+\]
+and \[\int_A f;\delta_{\pi_Y}(-,B)dp_X(\ast,-) = J(A \times B) = \int_B g;\delta_{\pi_X}(-,A)dp_Y(\ast,-).\] Note this means that the compatibility conditions hold.
+
+Now, we'll use this stuff to talk about Bayesian probability in $\cat{PerfProb}$. We'll now call rename things, as they did, now using $D$ (for data) instead of $X$ and using $H$ (for hypothesis) instead of $Y$.  Also, we'll call the composites $S \coloneqq f;\delta_{\pi_Y}$ for sampling distribution and $I \coloneqq g;\delta_{\pi_X}$ for inference.  Define $p_D \coloneqq p_H ; S$ to obtain
+\[
+\begin{tikzcd}
+{} & {1} \ar[dl,"p_H"] \ar[dr,"p_D"] & {} \\ 
+{H} \ar[rr,shift left=0.5,"S"] & {} & {D} \ar[ll,shift left=0.5,"I"]
+\end{tikzcd}
+\]
+And so, the outside paths commute since, as seen above, we have that \[ \int_B I(-,A)dp_D(\ast,-) = J(A \times B) = \int_A S(-,B)dp_H(\ast,-).\] Here is a relevant theorem.
+
+\begin{thm}
+	Given $\cat{PerfProb}$ arrows $P_H \from 1 \to H$ and a sampling distribution $S \from H \to D$, the inference map $I \from D \to H$ is determined uniquely up to a set of $P_D$-measure zero, where $P_D =P_H;S$. 
+\end{thm}
+
+Here is something extraneous to generalizing the Relative Entropy paper, but interesting.  There's an iterative process, using the above theorem, to update the probability $P_H$ once measurements are taken.  This is described in section 4 of the paper, directly after the theorem.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{Another stab at the category $\cat{Stat}$.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In the finite case, we simply want morphisms of $\cat{FinStat}$ to be diagrams
+\[
+\begin{tikzcd}
+{} & {1} \ar[dl,"p_X"] \ar[dr,"p_Y"] & {} \\
+{X} \ar[rr,shift left=1,"\delta_f"] & {} & {Y} \ar[ll,shift left=1,"s"] 
+\end{tikzcd}
+\]
+where $p_Y = p_X;\delta_f$ and $s;\delta_f=1_Y$. The first condition just means that $p_Y$ is the pushforward measure of $p_X$ along $\delta_f$.  The second condition means that the probability distribution $s(y,-)$ on $X$ gives a zero probability to elements of $X$ not mapped to $y$ via $f$.  While generalizing to infinite sets, we can still ask the distribution on $Y$ to be the composition of $p_X$ and some map $X \to Y$. However, it doesn't seem reasonable to ask that $s$ is a section.  While working only with power sets as $\sigma$-algebras, we can control point masses and specify certain points have no chance of being hit by a function.  However, in our new setting, point masses will typically have no probability anyways so the proper analogy would be to specify which measurable sets in $\Sigma_X$ get no measure via $s(y,-)$, for each $y$. We can maybe naively suppose certain conditions but let's just forget about all of that for now and see what we get.
+
+\begin{defn}
+	Define the category $\cat{Stat}$ to have as objects, probability distributions $p \from 1 \to (X,\Sigma)$ where $X$ is Polish and $\Sigma$ is its Borel $\sigma$-algebra. Arrows $(f,g) \from (X,\Sigma,p) \to (X',\Sigma',p')$ are pairs of stochastic maps $f \from X \to Y$ and $g \from Y \to X$ such that $p'=p;f$. {\color{red} I may also need that $p';g$ is absolutely continuous with respect to $p$.}
+\end{defn}
+
+Now a morphism in $\cat{Stat}$ gives us two probability distributions on $X$.  One is obtained from $p';g$, which is our 'prior' distribution which we hypothesize to exist.  The other is the actual distribution $p$.  Then the relative entropy gives a size to the difference between $p$ and $p';g$.  What about when there is no difference? 
+
+Define a subcategory $\cat{OptStat}$ of $\cat{Stat}$ consisting of those morphisms where the 'prior' hypothesis is optimal, meaning that the guess was right on. A morphism of this sort is a pair $(f,g) \from (X,\Sigma,p) \to (X',\Sigma',p')$ such that $p;f=p'$ and $p';g=p$.  
+
+This category is equivalent to the category $\cat{PRel}$ described by Ab.-Blt.-Pan {\color{red}Check this.}  They showed this category has some nice properties.  
+
+Baez-Fritz relate $\cat{Prop}$ to $\cat{OptStat}$, thought the finite set versions. They give a forgetful functor which is just as good in our case, giving us an identity on objects functor $\cat{OptStat} \to \cat{Prop}$ that forgets the second in the pair of morphisms. They also discuss how, in $\cat{OptStat}$, the conditions are so strong that the two probability distributions on $X$ and $X'$ along with the stochastic map $f \from X \to X'$ are enough to determine $g \from X' \to X$ as long as, in the finite case, there are no elements of $X'$ with zero measure.  However, in the infinite case, we can maybe use the A-B-P theorem to define $g$.  Also, the Culbertson-Sturtz have a theorem too, that is more directly related, though maybe in a different context than we'd like.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Kullback-Leibler Divergence.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The definition of the Kullback-Leibler divergence for two probability measures $p$ and $q$ on a measurable space $(X,\Sigma)$ is
+\[
+	D_{KL}(p,q) \coloneqq \int_X \log \frac{dp}{dq} dp.
+\]
+For this definition, we require $p$ to be absolutely continuous with respect to $q$, and so $dp/dq$ is the Radon-Nikodym derivative of $p$, that is $p (A) = \int_A (dp/dq)dq$. Of course, we also require that the measures we are dealing with are $\sigma$-finite, which we get by our assumption of Polish spaces.  
+
+In our case, we'll be working in the category $\cat{Stat}$. Then we'll attribute a value of KL divergence to every morphism $(f,g) \from (X,\Sigma,p) \to (X',\Sigma',p')$ by taking $q$ to be $p';g$.  
+
+Let's break down this divergence.  We can break up a countably generate measurable space $X$ into a countable union of disjoint sets.  And so we can write \[ D_{KL}(p,q) = \sum_{X_i} \int_{X_i} \log \frac{dp}{dq} dp.\] 
+
+  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{Extra Stuff.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Note that if this triangle commutes satisfies Bayes equation.  Using more traditional probability notation, we have that $P_X \coloneqq p$, $P_Y \coloneqq q$, $P_{Y|X} \coloneqq \delta_f$ and $P_{X|Y} \coloneqq s$. Then 
+\[
+P_Y ; P_{X|Y} = P_X ; P_{Y|X}.
+\]   
+More on this later.
+
+
+
+Suppose that we have two measure spaces $(X,\Sigma_X,m_X)$ and $(Y,\Sigma_Y,m_Y)$.  What is a measure preserving map between them?  I would suspect its a measurable map $f \from (X,\Sigma_X,m_X) \to (Y,\Sigma_Y,m_Y)$ such that for all $B \in \Sigma_Y$, we have $m_Y(B) = m_X(f^{-1}(B))$. This simply means that $m_Y$ is the push-forward measure $f_\ast m_X$.
+
+How do we get to this categorically? First of all, since a probability space $(X,\Sigma,m)$ is simply a stochastic map $1 \to (X,\Sigma)$, we should start by considering the under category $\cat{1/Stoch}$.  The objects are right, but how about the morphisms?  Lets first restrict our attention to deterministic morphisms. A stochastic map $\delta_f$ for a measurable map $f \from (X,\Sigma) \to (Y,\Sigma)$ in the under-category looks like
+\[
+\begin{tikzcd}
+{} & 1 \ar[dl,"p"] \ar[dr,"q"] & \\
+(X,\Sigma_X) \ar[rr,"\delta_f"] & {} & (Y,\Sigma_Y) 
+\end{tikzcd}
+\] 
+Breaking it down, we have probability measures $p \from \Sigma_X \to [0,1]$, $q \from \Sigma_Y \to [0,1]$ and 
+\[
+q(B) = \int_X \delta_f (-,B) dp = \int_X \chi_{f^{-1}(B)} dp = \int_{f^{-1}(B)} dp = p(f^{-1}(B)).
+\]
+Hence, deterministic maps of the form $\delta_f$ do preserve measures.  So let's include them in our category. If we only work in $\cat{Stoch_{CG}}$, then every deterministic map comes from a measurable map, so we can be sure that we always have a measurable map to work with.
+
+We can loosen the restrictions on this a bit and not require deterministic maps. That is, simply consider the entire under category $1/\cat{Stoch_{CG}}$. Now, morphisms are commutative triangles
+\[
+\begin{tikzcd}
+{} & 1 \ar[dl,"p"] \ar[dr,"q"] & \\
+(X,\Sigma_X) \ar[rr,"g"] & {} & (Y,\Sigma_Y) 
+\end{tikzcd}
+\] 
+for any stochastic map $g$.  Now, we can sort of say that $g$ preserves measure in the sense that
+\[
+q(B) = \int_X g(-,B)dp(\ast,-).
+\]
+
+\end{comment}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection*{Bibliography.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nocite{Folland_RealAnalysis}
+
+\bibliographystyle{plain}
+\bibliography{Bibliography_UCR}
+
+
+%\begin{thebibliography}{}
+%	\bibitem{ABP-NucTrcIdeals} Abramsky, Samson, Richard Blute, and Prakash Panangaden. "Nuclear and trace ideals in tensored*-categories." arXiv preprint math/9805102 (1998).
+	
+%	\bibitem{Baez-Frtz-RelEntpy} Baez, John C., and Tobias Fritz. "A Bayesian characterization of relative entropy." Theory and Applications of Categories 29.16 (2014): 422-456.
+	
+%	\bibitem{Culb-Sturtz-CatFoundBayes}Culbertson, Jared, and Kirk Sturtz. "A categorical foundation for Bayesian probability." Applied Categorical Structures 22.4 (2014): 647-662.
+	
+%	\bibitem{Faden-RegCondProbs} Faden, Arnold M. "The existence of regular conditional probabilities: necessary and sufficient conditions." The Annals of Probability (1985): 288-298.
+	
+%	\bibitem{BFong-BayNetworks} Fong, Brendan. "Causal theories: A categorical perspective on Bayesian networks." arXiv preprint arXiv:1301.6201 (2013).
+	
+%	\bibitem{Giry-Giry Monad} Giry, Michele. "A categorical approach to probability theory." Categorical aspects of topology and analysis. Springer Berlin Heidelberg, 1982. 68-85.
+	
+%	\bibitem{Lawvere-Cat of Prob Maps} Lawvere, F. William. "The category of probabilistic mappings." preprint (1962).
+	
+%	\bibitem{Panan-ProbRels} Panangaden, Prakash. "Probabilistic relations." SCHOOL OF COMPUTER SCIENCE RESEARCH REPORTS-UNIVERSITY OF BIRMINGHAM CSR (1998): 59-74.
+%\end{thebibliography}
+
+
+
+\end{document}
